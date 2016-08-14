@@ -1,7 +1,7 @@
 # Coursera_Getting_And_Cleaning_Data
 The required scripts for the Coursera, Getting &amp; Cleaning Data course, week 4.
 
-The purpose of this file is to explain how the script run_analysis.R works via the codebook. Aditionally it serves as as repository for the finished tidy data(Tidy.txt) & the raw data which the tidy data is built off of.
+The purpose of this file is to explain how the script run_analysis.R works via the codebook. Aditionally the folder serves as a repository for the finished tidy data(Tidy.txt) & the raw data which the tidy data is built off of.
 
 All data files are available here: https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
 A full description is available at the site where the data was obtained: http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones

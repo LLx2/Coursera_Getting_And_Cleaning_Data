@@ -1,0 +1,113 @@
+The purpose of this file is to explain how the script run_analysis.R works.
+
+A description of the raw data can be obtained here: http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
+The raw data itself is available here: https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
+
+The folder must contain the following files which will need to be unzipped:
+  activity_labels.txt
+  features_info.txt
+  features.txt
+  README.txt
+  subject_test.txt
+  X_test.txt
+  y_test.txt
+  subject_train.txt
+  X_train.txt
+  y_train.txt
+
+Much of the decisions and guidance in run_analysis.R was based off of the guidance provided by David Hood. 
+The link to his guidance can be found here: https://thoughtfulbloke.wordpress.com/2015/09/09/
+
+Variables, as explained in features.txt: 
+The features selected for this database come from the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ. These time domain signals (prefix 't' to denote time) were captured at a constant rate of 50 Hz. Then they were filtered using a median filter and a 3rd order low pass Butterworth filter with a corner frequency of 20 Hz to remove noise. Similarly, the acceleration signal was then separated into body and gravity acceleration signals (tBodyAcc-XYZ and tGravityAcc-XYZ) using another low pass Butterworth filter with a corner frequency of 0.3 Hz. 
+
+Subsequently, the body linear acceleration and angular velocity were derived in time to obtain Jerk signals (tBodyAccJerk-XYZ and tBodyGyroJerk-XYZ). Also the magnitude of these three-dimensional signals were calculated using the Euclidean norm (tBodyAccMag, tGravityAccMag, tBodyAccJerkMag, tBodyGyroMag, tBodyGyroJerkMag). 
+
+Finally a Fast Fourier Transform (FFT) was applied to some of these signals producing fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, fBodyGyroMag, fBodyGyroJerkMag. (Note the 'f' to indicate frequency domain signals). 
+
+These signals were used to estimate variables of the feature vector for each pattern:  
+'-XYZ' is used to denote 3-axial signals in the X, Y and Z directions.
+
+tBodyAcc-XYZ
+tGravityAcc-XYZ
+tBodyAccJerk-XYZ
+tBodyGyro-XYZ
+tBodyGyroJerk-XYZ
+tBodyAccMag
+tGravityAccMag
+tBodyAccJerkMag
+tBodyGyroMag
+tBodyGyroJerkMag
+fBodyAcc-XYZ
+fBodyAccJerk-XYZ
+fBodyGyro-XYZ
+fBodyAccMag
+fBodyAccJerkMag
+fBodyGyroMag
+fBodyGyroJerkMag
+
+The set of variables that were estimated from these signals are: 
+
+mean(): Mean value
+std(): Standard deviation
+
+Additional vectors obtained by averaging the signals in a signal window sample. These are used on the angle() variable:
+
+gravityMean
+tBodyAccMean
+tBodyAccJerkMean
+tBodyGyroMean
+tBodyGyroJerkMean
+
+The complete list of variables of each feature vector is available in 'features.txt'
+
+run_analysis.R works as follows:
+  getwd() / setwd() - find working directory and point R to the directory you want to work in.
+  Libraries - dplyr is used for dbase manipulation and stats is used to recognize and isoltate mean & standard deviation columns.
+  Lines 17 - 20 look to see if a data folder exists and if not creates it, points to the URL & then downloads the files
+  The files that pertain to Train are opened first:
+    trainsubject = subject_train.txt
+    traindata = X_train.txt
+    trainactivity = y_train.txt
+  The files that pertain to Test are then opened:
+    trainsubject = subject_test.txt
+    traindata = X_test.txt
+    trainactivity = y_test.txt
+  The file pertaing to features is opened:
+    features = features.txt
+  The file pertaining to activities is opened:
+    actlabels = activity_labels.txt
+  All test data sets are combined in lines 41 - 46:
+    testactivity = testactivity & actlabels, with renamed cols as "subject" & "activity"
+    testsubject = renaming of col V1 to "subject" 
+    testdata = using dplyr to merge data sets testdata & testsubject
+    testdata1 = using dplyr to merge data sets testactivity & test data
+  All train data ses are combined in lines 49 - 54:
+    trainactivity = trainactivity & actlabels, with renamed cols as "subject" & "activity"
+    trainsubject = renaming of col V1 to "subject" 
+    traindata = using dplyr to merge data sets traindata & trainsubject
+    traindata1 = using dplyr to merge data sets trainactivity & train data
+  allmerged = merging of testdata1 & traindata1 to create 1 data set
+  m = select columsn that contain 'mean'
+  m1 = select columsn that contain 'std'
+  m3 = select columsn that contain 'subject'
+  m4 = select columsn that contain 'activity'
+  subjectandactivity = merging of m3 & m4
+  meanandstd = merging of m & m1
+  newallmerged = merging of subjectandactivity & meanandstd
+  relabel on line 69 creates a nonnumeric list that describes the activity in the 'subject' col in data set newallmerged
+  lines 74: 83 clean up the column names:
+    line 74 - changes 't' to time
+    line 75 - changes 'f' to frequency
+    line 76 - changes 'Acc' to accelerometer
+    line 77 - changes 'BodyBody' to body
+    line 78 - changes 'Gyro' to gyro
+    line 79 - changes 'Mag' to magnitude
+    line 80 - changes ' -mean()' to mean
+    line 81 - changes ' -freq()' to freq
+    line 82 - changes ' -std()' to std
+    line 83 - changes 'tBody to timebody
+  lines 90:92 use dplyr to tidy the data and store it in tidyfinal.
+  line 95 finally generates the Tidy.txt file that represents the clean data
+  lines 97:final simply delete the downloaded files and is not required to run.
+  
